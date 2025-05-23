@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cors-proxy
+  labels:
+    app: cors-proxy
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: cors-proxy
+  template:
+    metadata:
+      labels:
+        app: cors-proxy
+    spec:
+      containers:
+        - name: cors-anywhere
+          image: 337367761967.dkr.ecr.us-west-2.amazonaws.com/cors-anywhere:latest
+          ports:
+            - containerPort: 8080
+          command: [ "node", "/usr/local/lib/node_modules/cors-anywhere/server.js" ]
+          args: [ "--port", "8080", "--disable-whitelist" ]
+          env:
+            - name: PORT
+              value: "8080"
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+            limits:
+              cpu: "1500m"
+              memory: "768Mi"
